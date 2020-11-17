@@ -1,0 +1,84 @@
+const int pwPin1 = 3;
+const int pwPin2 = 5;
+int triggerPin1 = 13;
+long sensor1, sensor2, distance1, distance2;
+
+
+void setup() {
+  
+  Serial.begin(9600);
+  pinMode(pwPin1, INPUT); 
+  pinMode(pwPin2, INPUT);
+  pinMode(triggerPin1, OUTPUT);
+}
+
+void read_sensor(){
+  sensor1 = pulseIn(pwPin1, HIGH);
+  distance1 = sensor1/58; //makes the reported range the distance in centimeters
+  delay(10); //helped make the range readings more stable
+  sensor2 = pulseIn(pwPin2, HIGH);
+  distance2 = sensor2/58;
+
+  
+}
+
+void start_sensor(){
+  digitalWrite(triggerPin1,HIGH);
+  delay(1);
+  digitalWrite(triggerPin1,LOW);
+}
+
+void printall(){         
+
+  if (distance1 >30 && distance2>30 ){
+    Serial.print("Left: ");
+    Serial.print(distance1);
+    Serial.print("cm  ");
+    Serial.print("Right: ");
+    Serial.print(distance2); 
+    Serial.print("cm  - ");
+    Serial.print("Clear ");
+    Serial.println(" ");
+  }
+  
+   if(distance1 <30 && distance2<30 ){
+    Serial.print("Left: ");
+    Serial.print(distance1);
+    Serial.print("cm  ");
+    Serial.print("Right: ");
+    Serial.print(distance2); 
+    Serial.print("cm  - ");
+    Serial.print("Object Ahead ");
+    Serial.println(" ");
+  }
+  if(distance1 <30 ){
+    Serial.print("Left: ");
+    Serial.print(distance1);
+    Serial.print("cm  ");
+    Serial.print("Right: ");
+    Serial.print(distance2); 
+    Serial.print("cm  - ");
+    Serial.print("Object to left ");
+    Serial.println(" ");
+  }
+  if(distance2 <30 ){
+    Serial.print("Left: ");
+    Serial.print(distance1);
+    Serial.print("cm  ");
+    Serial.print("Right: ");
+    Serial.print(distance2); 
+    Serial.print("cm  - ");
+    Serial.print("Object to right ");
+    Serial.println(" ");
+  }
+  
+  
+  
+}
+
+void loop () {
+  start_sensor();
+  read_sensor();
+  printall();
+  delay(210);  //delay before the void loop starts the section again
+}
